@@ -1,4 +1,4 @@
-﻿// La génération de code T4 est activée pour le modèle 'C:\Users\phili\Documents\CLG\H2022\420KBDLG - Web\TP\TP2\PhotosManager-Start_Project\Models\UsersDBEntities.edmx'. 
+﻿// La génération de code T4 est activée pour le modèle 'C:\Users\franc\Documents\Programming\C# project\420KBD_TP2\Models\UsersDBEntities.edmx'. 
 // Pour activer la génération de code héritée, définissez la valeur de la propriété
 // du concepteur 'Stratégie de génération de code' sur 'ObjectContext hérité'. Cette propriété est disponible dans la fenêtre Propriétés lorsque le modèle
 //  est ouvert dans le concepteur.
