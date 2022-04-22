@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="12181cbade80466daa123486ded0c1c0" Name="Diagram1" ZoomLevel="98">
+        <EntityTypeShape EntityType="UsersDBModel.Gender" Width="1.5" PointX="6.125" PointY="2.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="UsersDBModel.User" Width="1.5" PointX="4.25" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="UsersDBModel.UserType" Width="1.5" PointX="6.125" PointY="0.5" IsExpanded="true" />
+        <AssociationConnector Association="UsersDBModel.FK_Users_Genders" ManuallyRouted="false" />
+        <AssociationConnector Association="UsersDBModel.FK_Users_UserTypes" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="UsersDBModel.UnverifiedEmail" Width="1.5" PointX="8" PointY="2.625" />
+        <EntityTypeShape EntityType="UsersDBModel.ResetPasswordCommand" Width="2" PointX="8" PointY="4.625" />
+        <EntityTypeShape EntityType="UsersDBModel.Login" Width="1.5" PointX="8" PointY="0.5" />
+        <EntityTypeShape EntityType="UsersDBModel.FriendShip" Width="1.5" PointX="6.125" PointY="4" />
+        <AssociationConnector Association="UsersDBModel.FK__PhotoComm__Photo__0D44F85C" />
+        <AssociationConnector Association="UsersDBModel.FK__Photos__UserId__0A688BB1" />
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
