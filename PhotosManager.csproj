@@ -153,6 +153,15 @@
       <DependentUpon>UsersDBEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\PasswordView.cs" />
+    <Compile Include="Models\Photo.cs">
+      <DependentUpon>UsersDBEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PhotoRating.cs">
+      <DependentUpon>UsersDBEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PhotoVisibility.cs">
+      <DependentUpon>UsersDBEntities.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ResetPasswordCommand.cs">
       <DependentUpon>UsersDBEntities.tt</DependentUpon>
     </Compile>
@@ -261,6 +270,7 @@
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\PartialRefresh.js" />
     <Content Include="Scripts\ratings.js" />
+    <Content Include="SQL\CreateTables.sql" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

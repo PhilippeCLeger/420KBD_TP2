@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using UsersManager.Models;
 
 namespace UsersManager.Controllers
 {
@@ -14,18 +15,29 @@ namespace UsersManager.Controllers
             return View();
         }
 
-        public ActionResult Create() 
-        {
-            return View();
-        }
-
-        [HttpPost]
         public ActionResult Create()
         {
             return View();
         }
 
-        public ActionResult Edit()
+        [HttpPost]
+        public ActionResult Create(Photo photo)
+        {
+            return View();
+        }
+
+        public ActionResult Edit(int id)
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Edit(Photo photo)
+        {
+            return View();
+        }
+
+        public ActionResult Details(int id)
         {
             return View();
         }

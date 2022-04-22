@@ -44,6 +44,8 @@ namespace UsersManager.Models
                 throw new Exception("Aucune transaction en cours! Impossible de mettre à jour la base de données!");
         }
 
+
+        #region Users
         public static bool EmailAvailable(this UsersDBEntities DB, string email, int excludedId = 0)
         {
             User user = DB.Users.Where(u => u.Email.ToLower() == email.ToLower()).FirstOrDefault();
@@ -215,7 +217,10 @@ namespace UsersManager.Models
             }
             return false;
         }
+        #endregion
 
+
+        #region LoginJournal
         public static Login AddLogin(this UsersDBEntities DB, int userId)
         {
             Login login = new Login();
@@ -260,7 +265,10 @@ namespace UsersManager.Models
             OnlineUsers.RenewSerialNumber();
             return true;
         }
+        #endregion
 
+
+        #region Friendship
         public static FriendShip Add_FiendShipRequest(this UsersDBEntities DB, int userId, int targetUserId)
         {
             User user = DB.Users.Find(userId);
@@ -412,5 +420,153 @@ namespace UsersManager.Models
             DB.SaveChanges();
             return true;
         }
+
+        #endregion
+
+
+        #region Photos
+        public static Photo Add_Photo(this UsersDBEntities DB, Photo Photo)
+        {
+            Photo.CreationDate = DateTime.Now;
+            Photo.Save();
+            Photo = DB.Photos.Add(Photo);
+            DB.SaveChanges();
+            return Photo;
+        }
+        public static List<Photo> VisiblePhotos(this UsersDBEntities DB, int userId)
+        {
+            List<Photo> photos = new List<Photo>();
+            User user = DB.Users.Find(userId);
+            if (user != null)
+            {
+                if (user.Blocked)
+                    return photos;
+            }
+            else
+                return photos;
+            foreach (Photo photo in DB.Photos)
+            {
+                if (!photo.User.Blocked)
+                {
+                    if (photo.UserId == userId) /* private or owner */
+                        photos.Add(photo);
+                    else
+                        switch (photo.VisibilityId)
+                        {
+                            case 1: /* public */
+                                photos.Add(photo);
+                                break;
+                            case 2: /* friends */
+                                if (DB.AreFriends(userId, photo.UserId))
+                                    photos.Add(photo);
+                                break;
+                            default: break;
+                        }
+                }
+            }
+            return photos;
+        }
+
+        public static List<Photo> SearchPhotosByKeywords(List<Photo> photos, string keywords)
+        {
+            List<Photo> filteredPhotos = new List<Photo>();
+            string[] keywordsArray = keywords.ToLower().Split(' ');
+            foreach (var photo in photos)
+            {
+                string photoText = (photo.Title + " " + photo.Description + photo.User.GetFullName()).ToLower();
+                bool containsAllTags = true;
+                foreach (var keyword in keywordsArray)
+                {
+                    if (!photoText.Contains(keyword))
+                    {
+                        containsAllTags = false;
+                        break;
+                    }
+                }
+                if (containsAllTags)
+                    filteredPhotos.Add(photo);
+            }
+            return filteredPhotos;
+        }
+        public static bool Update_Photo(this UsersDBEntities DB, Photo Photo)
+        {
+            Photo.Save();
+            DB.Entry(Photo).State = EntityState.Modified;
+            DB.SaveChanges();
+            return true;
+        }
+
+        public static bool CompilePhotoRating(this UsersDBEntities DB, Photo photo)
+        {
+            int ratingsCount = 0;
+            double ratingsTotal = 0;
+            foreach (PhotoRating photoRating in photo.PhotoRatings)
+            {
+                if (!photoRating.User.Blocked)
+                {
+                    ratingsCount++;
+                    ratingsTotal += photoRating.Rating;
+                }
+            }
+            if (ratingsCount > 0)
+            {
+                photo.Ratings = ratingsTotal / ratingsCount;
+                photo.RatingsCount = ratingsCount;
+            }
+            else
+            {
+                photo.Ratings = 0;
+                photo.RatingsCount = 0;
+            }
+            DB.Entry(photo).State = EntityState.Modified;
+            DB.SaveChanges();
+            return true;
+        }
+        public static bool Update_Photo_Ratings(this UsersDBEntities DB)
+        {
+            BeginTransaction(DB);
+            foreach (Photo photo in DB.Photos)
+            {
+                DB.CompilePhotoRating(photo);
+            }
+            Commit();
+            return true;
+        }
+
+
+        public static bool Remove_Photo(this UsersDBEntities DB, int PhotoId)
+        {
+            Photo PhotoToDelete = DB.Photos.Find(PhotoId);
+            if (PhotoToDelete != null)
+            {
+                BeginTransaction(DB);
+                DB.PhotoRatings.RemoveRange(DB.PhotoRatings.Where(pr => pr.PhotoId == PhotoId));
+                PhotoToDelete.Remove();
+                DB.Photos.Remove(PhotoToDelete);
+                DB.SaveChanges();
+                Commit();
+                return true;
+            }
+            return false;
+        }
+        public static PhotoRating AddPhotoRating(this UsersDBEntities DB, PhotoRating photoRating)
+        {
+            PhotoRating existingPhotoRating = DB.PhotoRatings.Where(pr => pr.PhotoId == photoRating.PhotoId && pr.UserId == photoRating.UserId).FirstOrDefault();
+            if (existingPhotoRating != null)
+            {
+                existingPhotoRating.Rating = photoRating.Rating;
+                existingPhotoRating.Comment = photoRating.Comment;
+                existingPhotoRating.CreationDate = DateTime.Now;
+                DB.Entry(existingPhotoRating).State = EntityState.Modified;
+            }
+            else
+            {
+                photoRating = DB.PhotoRatings.Add(photoRating);
+            }
+            DB.SaveChanges();
+            return photoRating;
+        }
+
+        #endregion
     }
 }
