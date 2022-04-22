@@ -32,6 +32,38 @@
           <Property Name="LoginDate" Type="datetime" Nullable="false" />
           <Property Name="LogoutDate" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="PhotoRatings">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PhotoId" Type="int" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="Comment" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Rating" Type="int" Nullable="false" />
+          <Property Name="CreationDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Photos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="VisibilityId" Type="int" Nullable="false" />
+          <Property Name="GUID" Type="nvarchar" MaxLength="36" Nullable="false" />
+          <Property Name="CreationDate" Type="datetime" Nullable="false" />
+          <Property Name="Ratings" Type="float" Nullable="false" />
+          <Property Name="RatingsCount" Type="int" />
+        </EntityType>
+        <EntityType Name="PhotoVisibilities">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="ResetPasswordCommands">
           <Key>
             <PropertyRef Name="Id" />
@@ -84,6 +116,54 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__PhotoRati__Photo__5B78929E">
+          <End Role="Photos" Type="Self.Photos" Multiplicity="1" />
+          <End Role="PhotoRatings" Type="Self.PhotoRatings" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Photos">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PhotoRatings">
+              <PropertyRef Name="PhotoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__PhotoRati__UserI__5A846E65">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="PhotoRatings" Type="Self.PhotoRatings" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PhotoRatings">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Photos__UserId__56B3DD81">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Photos" Type="Self.Photos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Photos">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Photos__Visibili__57A801BA">
+          <End Role="PhotoVisibilities" Type="Self.PhotoVisibilities" Multiplicity="1" />
+          <End Role="Photos" Type="Self.Photos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PhotoVisibilities">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Photos">
+              <PropertyRef Name="VisibilityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Users_Genders">
           <End Role="Genders" Type="Self.Genders" Multiplicity="1" />
           <End Role="Users" Type="Self.Users" Multiplicity="*" />
@@ -112,6 +192,9 @@
           <EntitySet Name="FriendShips" EntityType="Self.FriendShips" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Genders" EntityType="Self.Genders" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Logins" EntityType="Self.Logins" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PhotoRatings" EntityType="Self.PhotoRatings" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Photos" EntityType="Self.Photos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PhotoVisibilities" EntityType="Self.PhotoVisibilities" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ResetPasswordCommands" EntityType="Self.ResetPasswordCommands" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UnverifiedEmails" EntityType="Self.UnverifiedEmails" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
@@ -119,6 +202,22 @@
           <AssociationSet Name="FK__Logins__UserId__607251E5" Association="Self.FK__Logins__UserId__607251E5">
             <End Role="Users" EntitySet="Users" />
             <End Role="Logins" EntitySet="Logins" />
+          </AssociationSet>
+          <AssociationSet Name="FK__PhotoRati__Photo__5B78929E" Association="Self.FK__PhotoRati__Photo__5B78929E">
+            <End Role="Photos" EntitySet="Photos" />
+            <End Role="PhotoRatings" EntitySet="PhotoRatings" />
+          </AssociationSet>
+          <AssociationSet Name="FK__PhotoRati__UserI__5A846E65" Association="Self.FK__PhotoRati__UserI__5A846E65">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="PhotoRatings" EntitySet="PhotoRatings" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Photos__UserId__56B3DD81" Association="Self.FK__Photos__UserId__56B3DD81">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Photos" EntitySet="Photos" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Photos__Visibili__57A801BA" Association="Self.FK__Photos__Visibili__57A801BA">
+            <End Role="PhotoVisibilities" EntitySet="PhotoVisibilities" />
+            <End Role="Photos" EntitySet="Photos" />
           </AssociationSet>
           <AssociationSet Name="FK_Users_Genders" Association="Self.FK_Users_Genders">
             <End Role="Genders" EntitySet="Genders" />
@@ -159,6 +258,8 @@
           <NavigationProperty Name="Gender" Relationship="Self.FK_Users_Genders" FromRole="Users" ToRole="Genders" />
           <NavigationProperty Name="UserType" Relationship="Self.FK_Users_UserTypes" FromRole="Users" ToRole="UserTypes" />
           <NavigationProperty Name="Logins" Relationship="UsersDBModel.FK_Logins_Users" FromRole="User" ToRole="Login" />
+          <NavigationProperty Name="PhotoRatings" Relationship="UsersDBModel.FK__PhotoRati__UserI__5A846E65" FromRole="User" ToRole="PhotoRating" />
+          <NavigationProperty Name="Photos" Relationship="UsersDBModel.FK__Photos__UserId__56B3DD81" FromRole="User" ToRole="Photo" />
           </EntityType>
         <EntityType Name="UserType">
           <Key>
@@ -212,6 +313,25 @@
             <End Role="Login" EntitySet="Logins" />
           </AssociationSet>
           <EntitySet Name="FriendShips" EntityType="UsersDBModel.FriendShip" />
+          <EntitySet Name="PhotoRatings" EntityType="UsersDBModel.PhotoRating" />
+          <EntitySet Name="Photos" EntityType="UsersDBModel.Photo" />
+          <EntitySet Name="PhotoVisibilities" EntityType="UsersDBModel.PhotoVisibility" />
+          <AssociationSet Name="FK__PhotoRati__Photo__5B78929E" Association="UsersDBModel.FK__PhotoRati__Photo__5B78929E">
+            <End Role="Photo" EntitySet="Photos" />
+            <End Role="PhotoRating" EntitySet="PhotoRatings" />
+          </AssociationSet>
+          <AssociationSet Name="FK__PhotoRati__UserI__5A846E65" Association="UsersDBModel.FK__PhotoRati__UserI__5A846E65">
+            <End Role="User" EntitySet="Users" />
+            <End Role="PhotoRating" EntitySet="PhotoRatings" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Photos__UserId__56B3DD81" Association="UsersDBModel.FK__Photos__UserId__56B3DD81">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Photo" EntitySet="Photos" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Photos__Visibili__57A801BA" Association="UsersDBModel.FK__Photos__Visibili__57A801BA">
+            <End Role="PhotoVisibility" EntitySet="PhotoVisibilities" />
+            <End Role="Photo" EntitySet="Photos" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="UnverifiedEmail">
           <Key>
@@ -263,6 +383,92 @@
           <Property Name="Accepted" Type="Boolean" Nullable="false" />
           <Property Name="Declined" Type="Boolean" Nullable="false" />
         </EntityType>
+        <EntityType Name="PhotoRating">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PhotoId" Type="Int32" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="Comment" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Rating" Type="Int32" Nullable="false" />
+          <Property Name="CreationDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Photo" Relationship="UsersDBModel.FK__PhotoRati__Photo__5B78929E" FromRole="PhotoRating" ToRole="Photo" />
+          <NavigationProperty Name="User" Relationship="UsersDBModel.FK__PhotoRati__UserI__5A846E65" FromRole="PhotoRating" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Photo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="VisibilityId" Type="Int32" Nullable="false" />
+          <Property Name="GUID" Type="String" Nullable="false" MaxLength="36" FixedLength="false" Unicode="true" />
+          <Property Name="CreationDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Ratings" Type="Double" Nullable="false" />
+          <Property Name="RatingsCount" Type="Int32" />
+          <NavigationProperty Name="PhotoRatings" Relationship="UsersDBModel.FK__PhotoRati__Photo__5B78929E" FromRole="Photo" ToRole="PhotoRating" />
+          <NavigationProperty Name="User" Relationship="UsersDBModel.FK__Photos__UserId__56B3DD81" FromRole="Photo" ToRole="User" />
+          <NavigationProperty Name="PhotoVisibility" Relationship="UsersDBModel.FK__Photos__Visibili__57A801BA" FromRole="Photo" ToRole="PhotoVisibility" />
+        </EntityType>
+        <EntityType Name="PhotoVisibility">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Photos" Relationship="UsersDBModel.FK__Photos__Visibili__57A801BA" FromRole="PhotoVisibility" ToRole="Photo" />
+        </EntityType>
+        <Association Name="FK__PhotoRati__Photo__5B78929E">
+          <End Type="UsersDBModel.Photo" Role="Photo" Multiplicity="1" />
+          <End Type="UsersDBModel.PhotoRating" Role="PhotoRating" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Photo">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PhotoRating">
+              <PropertyRef Name="PhotoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__PhotoRati__UserI__5A846E65">
+          <End Type="UsersDBModel.User" Role="User" Multiplicity="1" />
+          <End Type="UsersDBModel.PhotoRating" Role="PhotoRating" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PhotoRating">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Photos__UserId__56B3DD81">
+          <End Type="UsersDBModel.User" Role="User" Multiplicity="1" />
+          <End Type="UsersDBModel.Photo" Role="Photo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Photo">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Photos__Visibili__57A801BA">
+          <End Type="UsersDBModel.PhotoVisibility" Role="PhotoVisibility" Multiplicity="1" />
+          <End Type="UsersDBModel.Photo" Role="Photo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PhotoVisibility">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Photo">
+              <PropertyRef Name="VisibilityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -339,6 +545,41 @@
                 <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
                 <ScalarProperty Name="TargetUserId" ColumnName="TargetUserId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PhotoRatings">
+            <EntityTypeMapping TypeName="UsersDBModel.PhotoRating">
+              <MappingFragment StoreEntitySet="PhotoRatings">
+                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
+                <ScalarProperty Name="Rating" ColumnName="Rating" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="PhotoId" ColumnName="PhotoId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Photos">
+            <EntityTypeMapping TypeName="UsersDBModel.Photo">
+              <MappingFragment StoreEntitySet="Photos">
+                <ScalarProperty Name="RatingsCount" ColumnName="RatingsCount" />
+                <ScalarProperty Name="Ratings" ColumnName="Ratings" />
+                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+                <ScalarProperty Name="VisibilityId" ColumnName="VisibilityId" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PhotoVisibilities">
+            <EntityTypeMapping TypeName="UsersDBModel.PhotoVisibility">
+              <MappingFragment StoreEntitySet="PhotoVisibilities">
+                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

@@ -132,6 +132,7 @@
     <Compile Include="Controllers\FriendShipsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\AccountsController.cs" />
+    <Compile Include="Controllers\PhotosController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -313,6 +314,8 @@
     <Content Include="Scripts\jquery-3.4.1.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="ImagesData\Photos\Thumbnails\" />
+    <Folder Include="Views\Photos\" />
     <Folder Include="Views\Users\" />
   </ItemGroup>
   <PropertyGroup>

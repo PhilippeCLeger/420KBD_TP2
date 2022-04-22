@@ -16,6 +16,13 @@
         <EntityTypeShape EntityType="UsersDBModel.FriendShip" Width="1.5" PointX="6.125" PointY="4" />
         <AssociationConnector Association="UsersDBModel.FK__PhotoComm__Photo__0D44F85C" />
         <AssociationConnector Association="UsersDBModel.FK__Photos__UserId__0A688BB1" />
+        <EntityTypeShape EntityType="UsersDBModel.PhotoRating" Width="1.5" PointX="10.75" PointY="3.625" />
+        <EntityTypeShape EntityType="UsersDBModel.Photo" Width="1.5" PointX="13.25" PointY="0.5" />
+        <EntityTypeShape EntityType="UsersDBModel.PhotoVisibility" Width="1.5" PointX="9.875" PointY="1.5" />
+        <AssociationConnector Association="UsersDBModel.FK__PhotoRati__Photo__5B78929E" />
+        <AssociationConnector Association="UsersDBModel.FK__PhotoRati__UserI__5A846E65" />
+        <AssociationConnector Association="UsersDBModel.FK__Photos__UserId__56B3DD81" />
+        <AssociationConnector Association="UsersDBModel.FK__Photos__Visibili__57A801BA" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
