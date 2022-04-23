@@ -18,13 +18,13 @@ using System;
 public partial class Photo
 {
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-    public Photo()
-    {
+    //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+    //public Photo()
+    //{
 
-        this.PhotoRatings = new HashSet<PhotoRating>();
+    //    this.PhotoRatings = new HashSet<PhotoRating>();
 
-    }
+    //}
 
 
     public int Id { get; set; }

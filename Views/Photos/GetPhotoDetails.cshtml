@@ -1,0 +1,150 @@
+﻿@model UsersManager.Models.Photo
+    @{ 
+        UsersManager.Models.User currentUser = UsersManager.Models.OnlineUsers.GetSessionUser();
+        UsersManager.Models.PhotoRating currentPhotoRating = Model.PhotoRatings.Where(pr => (pr.PhotoId == Model.Id && pr.UserId == currentUser.Id)).FirstOrDefault();
+        int currentUserRating = 0;
+        string currentUserComment = "";
+        DateTime currentUserRatingCreationDate = DateTime.Now;
+        bool writeAccess = Model.UserId == currentUser.Id;
+        if (currentPhotoRating != null)
+        {
+            currentUserRating = currentPhotoRating.Rating;
+            currentUserComment = currentPhotoRating.Comment;
+            currentUserRatingCreationDate = currentPhotoRating.CreationDate;
+        }
+        string sortDatesIconColor = ((string)Session["RatingFieldToSort"] == "dates" ? "blue" : "black");
+        string sortUsersIconColor = ((string)Session["RatingFieldToSort"] == "users" ? "blue" : "black");
+        string sortRatingsIconColor = ((string)Session["RatingFieldToSort"] == "ratings" ? "blue" : "black");
+    }
+
+<div>
+    <h2>@Model.Title</h2>
+    <div style="display:grid; grid-template-columns:30px 30px 30px">
+        @Helper.GlyphiconAction("Index", "glyphicon-circle-arrow-left", "Retour à la liste");
+        @if (writeAccess)
+        {
+            <span>
+                @Helper.GlyphiconAction("Edit/" + Model.Id, "glyphicon-edit", "Modifier " + Model.Title)
+            </span>
+            <span>
+                @Helper.GlyphiconConfirmAction("Delete/" + Model.Id.ToString(), "glyphicon-remove-circle", "Effacer " + Model.Title + "...")
+            </span>
+        }
+        else
+        {
+            <span></span><span></span>
+        }
+    </div>
+</div>
+<hr />
+<div class="PhotoDetailsLayout">
+    <div>
+        <div style="display:grid; grid-template-columns:180px 26px">
+            <div>@Helper.AvatarUser(Model.User)</div>
+            <div style="margin-top:-25px"><h3>@ViewBag.Visibility</h3></div>
+        </div>
+        <div style="display:grid; grid-template-columns:150px auto">
+            @Helper.Rating(Model.Id.ToString(), Model.Ratings, true, 2)
+            <span style="font-size:20px">@Math.Round(Model.Ratings, 1) / @Model.RatingsCount</span>
+        </div>
+        @Helper.PhotoBig(Model)
+        <div style="margin-top:8px; width:700px; text-align:justify;">
+            @Model.Description
+            <br /><br />
+        </div>
+    </div>
+    <fieldset style="min-width:320px;">
+        <legend>
+            Évaluations
+        </legend>
+        <div id="commandSection" style="display:grid; grid-template-columns: 60px 30px 30px 30px;">
+            <span id="AddModifyCurrentUserRating" class="glyphicon glyphiconStyle glyphicon-edit pointer"
+                  title="Ajouter/Modifier votre évaluation" style="color:#337ab7;"></span>
+            <span id="sortDates" fieldToSort="dates" style="color:@sortDatesIconColor"
+                  class="sortRatings glyphicon glyphiconStyle glyphicon-calendar pointer" title="Trier par dates d'évaluation"></span>
+            <span id="sortUsers" fieldToSort="users" style="color:@sortUsersIconColor"
+                  class="sortRatings glyphicon glyphiconStyle glyphicon-user pointer" title="Trier noms d'usager"></span>
+            <span id="sortRatingss" fieldToSort="ratings" style="color:@sortRatingsIconColor"
+                  class="sortRatings glyphicon glyphiconStyle glyphicon-star pointer" title="Trier par évaluations"></span>
+        </div>
+        <div id="PhotoRatingsContainer" class="PhotoRatingsContainer">
+            <div id="currentUserRatingForm">
+                <hr />
+                <div style="height: 40px; display:grid; grid-template-columns: 180px auto;">
+                    <div>
+                        @Helper.AvatarUser(currentUser)
+                    </div>
+                    <div>
+                        @Helper.When(currentUserRatingCreationDate)
+                    </div>
+                </div>
+                <div style="height: 25px; display:grid; grid-template-columns:100px 26px 26px;">
+                    @Helper.Rating("ratingCurrentUser", currentUserRating, false, 1.4)
+                    <div id="updateCurrentUserRating" class="glyphicon glyphicon-green glyphiconStyle glyphicon-ok pointer" 
+                         title="Modifier votre évaluation" style=""></div>
+                    <div id="cancelCurrentUserRating" class="glyphicon glyphicon-red glyphiconStyle glyphicon-remove pointer"
+                         title="Annuler la Modification de votre évaluation" style=""></div>
+                </div>
+                <textarea id="commentCurrentUser" style="width:100%">@currentUserComment</textarea>
+            </div>
+            @{ 
+                IEnumerable<UsersManager.Models.PhotoRating> PhotoRatings = null;
+                switch ((string)Session["RatingFieldToSort"])
+                {
+                    case "dates":
+                        if ((bool)Session["RatingFieldSortDir"])
+                        {
+                            PhotoRatings = Model.PhotoRatings.OrderBy(pr => pr.CreationDate);
+                        }
+                        else
+                        {
+                            PhotoRatings = Model.PhotoRatings.OrderByDescending(pr => pr.CreationDate);
+                        }
+                        break;
+                    case "users":
+                        if ((bool)Session["RatingFieldSortDir"])
+                        {
+                            PhotoRatings = Model.PhotoRatings.OrderBy(pr => pr.User.FirstName).ThenBy(pr => pr.User.LastName);
+                        }
+                        else
+                        {
+                            PhotoRatings = Model.PhotoRatings.OrderByDescending(pr => pr.User.FirstName).ThenByDescending(pr => pr.User.LastName);
+                        }
+                        break;
+                    case "ratings":
+                        if ((bool)Session["RatingFieldSortDir"])
+                        {
+                            PhotoRatings = Model.PhotoRatings.OrderBy(pr => pr.Rating);
+                        }
+                        else
+                        {
+                            PhotoRatings = Model.PhotoRatings.OrderByDescending(pr => pr.Rating);
+                        }
+                        break;
+                    default: break;
+                }
+                foreach(UsersManager.Models.PhotoRating photoRating in PhotoRatings)
+                {
+                    if (!photoRating.User.Blocked)
+                    {
+                        <hr />
+                        <div style="height: 40px; display:grid; grid-template-columns:180px auto">
+                            <div>
+                                @Helper.AvatarUser(photoRating.User)
+                            </div>
+                            <div>
+                                @Helper.When(photoRating.CreationDate)
+                            </div>
+                        </div>
+                        <div>
+                            @Helper.Rating("rating_" + photoRating.Id, photoRating.Rating, true, 1.4)
+                        </div>
+                        <div>
+                            @photoRating.Comment
+                        </div>
+                    }
+                }
+            }
+        </div>
+    </fieldset>
+</div>

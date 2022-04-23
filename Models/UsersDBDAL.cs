@@ -114,6 +114,7 @@ namespace UsersManager.Models
                 BeginTransaction(DB);
                 OnlineUsers.RemoveUser(userToDelete.Id);
                 userToDelete.RemoveAvatar();
+                DB.Remove_Users_Photos(userToDelete.Id, useTransaction: false);
                 DB.Users.Remove(userToDelete);
                 DB.SaveChanges();
                 DB.DeleteFriendShips(userId);
@@ -549,6 +550,28 @@ namespace UsersManager.Models
             }
             return false;
         }
+
+
+        public static bool Remove_Users_Photos(this UsersDBEntities DB, int userId, bool useTransaction = true)
+        {
+            List<Photo> PhotosToDelete = DB.Photos.Where((photo) => photo.UserId == userId).ToList();
+            if (PhotosToDelete.Count > 0)
+            {
+                if (useTransaction) BeginTransaction(DB);
+                foreach (var photoToDelete in PhotosToDelete)
+                {
+                    DB.PhotoRatings.RemoveRange(DB.PhotoRatings.Where(pr => pr.PhotoId == photoToDelete.Id));
+                    photoToDelete.Remove();
+                    DB.Photos.Remove(photoToDelete);
+                }
+                DB.SaveChanges();
+                if (useTransaction) Commit();
+                return true;
+            }
+            return false;
+        }
+
+
         public static PhotoRating AddPhotoRating(this UsersDBEntities DB, PhotoRating photoRating)
         {
             PhotoRating existingPhotoRating = DB.PhotoRatings.Where(pr => pr.PhotoId == photoRating.PhotoId && pr.UserId == photoRating.UserId).FirstOrDefault();

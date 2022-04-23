@@ -41,5 +41,10 @@ namespace UsersManager.Controllers
         {
             return View();
         }
+
+        public PartialViewResult GetPhotoDetails(int photoId)
+        {
+            return PartialView();
+        }
     }
 }
