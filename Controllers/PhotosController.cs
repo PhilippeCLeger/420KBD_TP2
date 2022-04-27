@@ -169,35 +169,47 @@ namespace UsersManager.Controllers
 
         public ActionResult SortRatingsBy(string fieldToSort)
         {
-            return View();
+            if ((string)Session["RatingFieldToSort"] == fieldToSort)
+            {
+                Session["RatingFieldSortDir"] = Toggle((bool)Session["RatingFieldSortDir"]);
+                Session["RatingFieldToSort"] = fieldToSort;
+                return View(DB.Photos);
+            }
+            return null;
+            
         }
 
         public ActionResult SortPhotosBy(string fieldToSort)
         {
-            Session["PhotoFieldSortDir"] = (string)Session["PhotoFieldToSort"] == fieldToSort;
-            Session["PhotoFieldToSort"] = fieldToSort;
+            if ((string)Session["PhotoFieldToSort"] == fieldToSort)
+            {
+                Session["PhotoFieldSortDir"] = Toggle((bool)Session["PhotoFieldSortDir"]);
+                Session["PhotoFieldToSort"] = fieldToSort;
+                return View(DB.Photos);
+            }
 
-            return View(DB.Photos);
+            return null;
         }
+
+        public bool Toggle(bool value) => !value;
 
         public PartialViewResult PhotoForm(Photo photo)
         {
-            
             return PartialView(photo);
         }
 
         // -------------------------------------------------------- serial number --------------------------------------------------
 
-        // je ne suis pas sur si nous avons déja cette méthode
-        //public PartialViewResult GetImages(bool forceRefresh = false)
-        //{
-        //    if (forceRefresh || !IsImagesUpToDate())
-        //    {
-        //        SetLocalImagesSerialNumber();
-        //        return PartialView(DB.Photos.OrderByDescending(i => i.CreationDate));
-        //    }
-        //    return null;
-        //}
+
+        public PartialViewResult GetPhotos(bool forceRefresh = false)
+        {
+            if (forceRefresh || !IsPhotoUpToDate())
+            {
+                SetLocalPhotosSerialNumber();
+                return PartialView(DB.Photos);
+            }
+            return null;
+        }
 
 
         protected override void Dispose(bool disposing)
@@ -211,26 +223,26 @@ namespace UsersManager.Controllers
 
         public void RenewPhotosSerialNumber()
         {
-            HttpRuntime.Cache["imagesSerialNumber"] = Guid.NewGuid().ToString();
+            HttpRuntime.Cache["PhotosSerialNumber"] = Guid.NewGuid().ToString();
         }
 
         public string GetPhotosSerialNumber()
         {
-            if (HttpRuntime.Cache["imagesSerialNumber"] == null)
+            if (HttpRuntime.Cache["PhotosSerialNumber"] == null)
             {
                 RenewPhotosSerialNumber();
             }
-            return (string)HttpRuntime.Cache["imagesSerialNumber"];
+            return (string)HttpRuntime.Cache["PhotosSerialNumber"];
         }
 
         public void SetLocalPhotosSerialNumber()
         {
-            Session["imagesSerialNumber"] = GetPhotosSerialNumber();
+            Session["PhotosSerialNumber"] = GetPhotosSerialNumber();
         }
 
         public bool IsPhotoUpToDate()
         {
-            return ((string)Session["imagesSerialNumber"] == (string)HttpRuntime.Cache["imagesSerialNumber"]);
+            return ((string)Session["PhotosSerialNumber"] == (string)HttpRuntime.Cache["PhotosSerialNumber"]);
         }
     }
 }

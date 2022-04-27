@@ -11,7 +11,7 @@
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/partialRefresh")
     <script>
-        let partialRefresh = new PartialRefresh("@Url.Action("SortPhotosBy")?fieldToSort=dates", "photosContainer", 5, postRefreshPhotos);
+        let partialRefresh = new PartialRefresh("@Url.Action("GetImages")?fieldToSort=dates", "photosContainer", 5, postRefreshPhotos);
         function postRefreshPhotos() {
             null;
         }
