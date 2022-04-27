@@ -14,10 +14,11 @@ namespace UsersManager.Controllers
         // GET: Photos
         public ActionResult Index()
         {
+            SetLocalPhotosSerialNumber();
             InitSortPhotos();
             return View();
         }
-
+        [UserAccess]
         public ActionResult Create()
         {
             ViewBag.PhotoVisibilities = GetPhotoVisibilities();
@@ -32,10 +33,16 @@ namespace UsersManager.Controllers
             //photo.UserId = 1;
             //photo.Ratings = 0;
             //photo.CreationDate
+            //photo.VisibilityId = (int)photo.VisibilityId;
             if (ModelState.IsValid)
             {
                 photo = DB.Add_Photo(photo);
+                RenewPhotosSerialNumber();
                 return RedirectToAction($"Details/{photo.Id}");
+            }
+            else
+            {
+                var ms = ModelState;
             }
             ViewBag.PhotoVisibilities = GetPhotoVisibilities();
             return View(photo);
@@ -59,6 +66,7 @@ namespace UsersManager.Controllers
             if (ModelState.IsValid)
             {
                 DB.Update_Photo(photo);
+                RenewPhotosSerialNumber();
                 return RedirectToAction($"Details/{photo.Id}");
             }
             ViewBag.PhotoVisibilities = GetPhotoVisibilities();
@@ -79,6 +87,8 @@ namespace UsersManager.Controllers
         public ActionResult Delete(int id)
         {
             // Delete la photo et ses ratings...
+            DB.Remove_Photo(id);
+            RenewPhotosSerialNumber();
             return RedirectToAction("Index");
         }
 
@@ -117,6 +127,7 @@ namespace UsersManager.Controllers
 
         public PartialViewResult GetPhotoDetails(int photoId)
         {
+            InitSortRatings();
             return GetPhotoView<PartialViewResult>(photoId, (photo) => PartialView(photo), () => null);
             //Photo photo = DB.Photos.Find(photoId);
             //if(photo != null)
@@ -150,6 +161,7 @@ namespace UsersManager.Controllers
             Photo photo = DB.Photos.Find(photoId);
             if (photo != null)
             {
+                photo.PhotoRatings = DB.PhotoRatings.Where((r) => r.PhotoId == photo.Id).ToArray();
                 return getView(photo);
             }
             return getAlternateView();
@@ -172,6 +184,53 @@ namespace UsersManager.Controllers
         {
             
             return PartialView(photo);
+        }
+
+        // -------------------------------------------------------- serial number --------------------------------------------------
+
+        // je ne suis pas sur si nous avons déja cette méthode
+        //public PartialViewResult GetImages(bool forceRefresh = false)
+        //{
+        //    if (forceRefresh || !IsImagesUpToDate())
+        //    {
+        //        SetLocalImagesSerialNumber();
+        //        return PartialView(DB.Photos.OrderByDescending(i => i.CreationDate));
+        //    }
+        //    return null;
+        //}
+
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                DB.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        public void RenewPhotosSerialNumber()
+        {
+            HttpRuntime.Cache["imagesSerialNumber"] = Guid.NewGuid().ToString();
+        }
+
+        public string GetPhotosSerialNumber()
+        {
+            if (HttpRuntime.Cache["imagesSerialNumber"] == null)
+            {
+                RenewPhotosSerialNumber();
+            }
+            return (string)HttpRuntime.Cache["imagesSerialNumber"];
+        }
+
+        public void SetLocalPhotosSerialNumber()
+        {
+            Session["imagesSerialNumber"] = GetPhotosSerialNumber();
+        }
+
+        public bool IsPhotoUpToDate()
+        {
+            return ((string)Session["imagesSerialNumber"] == (string)HttpRuntime.Cache["imagesSerialNumber"]);
         }
     }
 }
