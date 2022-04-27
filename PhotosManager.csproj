@@ -234,6 +234,7 @@
     <Content Include="ImagesData\Avatars\no_avatar.png" />
     <Content Include="ImagesData\Loading_icon.gif" />
     <Content Include="ImagesData\No_image.png" />
+    <Content Include="ImagesData\Photos\No_image.png" />
     <Content Include="Models\UsersDBEntities.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>UsersDBEntities.Context.cs</LastGenOutput>

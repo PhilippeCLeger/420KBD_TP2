@@ -19,7 +19,7 @@ namespace UsersManager.Models
         }
 
         public string Data { get; set; }
-        private static ImageGUIDReference PhotoReference = new ImageGUIDReference(@"/ImagesData/Photos/", @"No_Photo.png", true);
+        private static ImageGUIDReference PhotoReference = new ImageGUIDReference(@"/ImagesData/Photos/", @"No_image.png", true);
 
         public string GetUrl(bool thumbnail = false)
         {

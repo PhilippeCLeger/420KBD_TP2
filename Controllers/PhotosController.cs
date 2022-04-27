@@ -28,6 +28,10 @@ namespace UsersManager.Controllers
         [HttpPost]
         public ActionResult Create(Photo photo)
         {
+            //photo.Id = -1;
+            //photo.UserId = 1;
+            //photo.Ratings = 0;
+            //photo.CreationDate
             if (ModelState.IsValid)
             {
                 photo = DB.Add_Photo(photo);

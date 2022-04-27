@@ -3,6 +3,7 @@
 @{ 
     System.Web.Mvc.SelectList photoVisibilities = ViewBag.PhotoVisibilities;
     int photoVisibility = Model.PhotoVisibility != null ? Model.PhotoVisibility.Id : -1;
+    //string textSubmit = (string)(ViewBag.Title).StartsWith("Ajout")
 }
 
 <h2>@ViewBag.Title</h2>
@@ -12,8 +13,11 @@
 @Html.AntiForgeryToken()
 
 @Html.HiddenFor(model => model.Id)
+@Html.HiddenFor(model => model.Ratings)
+@Html.HiddenFor(model => model.RatingsCount)
 @Html.HiddenFor(model => model.CreationDate)
-@Html.HiddenFor(model => model.VisibilityId)
+@Html.HiddenFor(model => model.UserId)
+
 
 <div class="form-horizontal">
 
@@ -33,14 +37,13 @@
 
     <fieldset class="formField">
         <legend>@Html.DisplayNameFor(model => model.GUID)</legend>
-        @Helper.ImageUploader(Model.Id, Model.GetUrl(), "ImageData", "~/ImagesData/Loading_icon.gif", "Cliquez pour choisir l'image")
-        @Html.ValidationMessageFor(model => model.GUID, "", new { @class = "text-danger" })
+        @Helper.ImageUploader(Model.Id, Model.GetUrl(), "Data", "~/ImagesData/Loading_icon.gif", "Cliquez pour choisir l'image")
+        @Html.ValidationMessageFor(model => model.Data, "", new { @class = "text-danger" })
     </fieldset>
 
     <fieldset class="formField">
-        <legend>@Html.DisplayNameFor(model => model.PhotoVisibility)</legend>
+        <legend>Visibilité</legend>
         @Helper.ListToRadioButtonGroup("PhotoVisibility", photoVisibilities, photoVisibility)
-        @Html.ValidationMessageFor(model => model.PhotoVisibility, "", new { @class = "text-danger" })
     </fieldset>
 
     <div class="form-group">
