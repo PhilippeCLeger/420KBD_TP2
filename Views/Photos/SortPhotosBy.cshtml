@@ -1,0 +1,30 @@
+﻿@model IEnumerable<UsersManager.Models.Photo>
+@{ 
+    IEnumerable<UsersManager.Models.Photo> photosList = null;
+    switch ((string)Session["PhotoFieldToSort"])
+    {
+        case "dates":
+            photosList = (bool)Session["photoFieldSortDir"] ?
+                Model.OrderBy(p => p.CreationDate) :
+                Model.OrderByDescending(p => p.CreationDate);
+            break;
+        case "users":
+            photosList = (bool)Session["photoFieldSortDir"] ?
+                Model.OrderBy(p => p.User.FirstName).ThenBy(p => p.User.LastName) :
+                Model.OrderByDescending(p => p.User.FirstName).ThenByDescending(p => p.User.LastName);
+            break;
+        case "ratings":
+            photosList = (bool)Session["photoFieldSortDir"] ?
+                Model.OrderBy(p => p.Ratings) :
+                Model.OrderByDescending(p => p.Ratings);
+            break;
+    }
+}
+
+@foreach(var photo in photosList)
+{
+    <div>
+        @Helper.PhotoBig(photo)
+    </div>
+}
+

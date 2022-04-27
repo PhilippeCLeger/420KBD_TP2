@@ -237,7 +237,16 @@
 }
 
 
-@helper PhotoBig(UsersManager.Models.Photo photo) 
-{ 
 
+@helper PhotoBig(UsersManager.Models.Photo photo)
+{var Url = new System.Web.Mvc.UrlHelper(HttpContext.Current.Request.RequestContext);
+                    var imageUrl = Url.Content(photo.GetUrl(false));
+    <div>
+        <a href="@imageUrl" target="_blank">
+            <div class="photoBig"
+                 style="background: url(@imageUrl) no-repeat center center;
+                 background-size: cover;">
+            </div>
+        </a>
+    </div>
 }

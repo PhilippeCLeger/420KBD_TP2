@@ -309,6 +309,10 @@
     <Content Include="Views\FriendShips\GetFriendShipsStatus.cshtml" />
     <Content Include="Views\Photos\Details.cshtml" />
     <Content Include="Views\Photos\GetPhotoDetails.cshtml" />
+    <Content Include="Views\Photos\Index.cshtml" />
+    <Content Include="Views\Photos\SortPhotosBy.cshtml" />
+    <Content Include="Views\Photos\PhotoForm.cshtml" />
+    <Content Include="Views\Photos\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

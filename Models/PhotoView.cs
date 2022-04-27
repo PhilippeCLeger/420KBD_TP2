@@ -10,7 +10,7 @@ namespace UsersManager.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Photo()
         {
-            this.PhotoRatings = new HashSet<PhotoRating>();
+            //this.PhotoRatings = new HashSet<PhotoRating>();
             Ratings = 0;
             RatingsCount = 0;
             CreationDate = DateTime.Now;
@@ -47,7 +47,7 @@ namespace UsersManager.Models
         public string Description { get; set; }
 
         [Display(Name = "Photo")]
-        public string GIUD { get; set; }
+        public string GUID { get; set; }
 
         [Display(Name = "Évaluations"), Range(0, 5, ErrorMessage = "invalide")]
         public double Ratings { get; set; }
