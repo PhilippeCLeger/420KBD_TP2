@@ -18,7 +18,7 @@ namespace UsersManager.Controllers
             InitSortPhotos();
             return View();
         }
-
+        [UserAccess]
         public ActionResult Create()
         {
             ViewBag.PhotoVisibilities = GetPhotoVisibilities();
@@ -29,11 +29,20 @@ namespace UsersManager.Controllers
         [HttpPost]
         public ActionResult Create(Photo photo)
         {
+            //photo.Id = -1;
+            //photo.UserId = 1;
+            //photo.Ratings = 0;
+            //photo.CreationDate
+            //photo.VisibilityId = (int)photo.VisibilityId;
             if (ModelState.IsValid)
             {
                 photo = DB.Add_Photo(photo);
                 RenewPhotosSerialNumber();
                 return RedirectToAction($"Details/{photo.Id}");
+            }
+            else
+            {
+                var ms = ModelState;
             }
             ViewBag.PhotoVisibilities = GetPhotoVisibilities();
             return View(photo);
@@ -63,7 +72,7 @@ namespace UsersManager.Controllers
             ViewBag.PhotoVisibilities = GetPhotoVisibilities();
             return View(photo);
         }
-
+        [UserAccess]
         public ActionResult Details(int id)
         {
             return GetPhotoView<ActionResult>(id, (photo) => View(photo), () => RedirectToAction("Index"));
@@ -118,6 +127,7 @@ namespace UsersManager.Controllers
 
         public PartialViewResult GetPhotoDetails(int photoId)
         {
+            InitSortRatings();
             return GetPhotoView<PartialViewResult>(photoId, (photo) => PartialView(photo), () => null);
             //Photo photo = DB.Photos.Find(photoId);
             //if(photo != null)
@@ -125,6 +135,16 @@ namespace UsersManager.Controllers
             //    return PartialView(photo);
             //}
             //return null;
+        }
+
+        private void GetFullPhoto(Photo photo)
+        {
+            if (photo != null)
+            {
+                photo.PhotoRatings = DB.PhotoRatings.Where((r) => r.PhotoId == photo.Id).ToList();
+                photo.Ratings = photo.PhotoRatings.Average((r) => r.Rating);
+                photo.RatingsCount = photo.PhotoRatings.Count();
+            }
         }
 
         private SelectList GetPhotoVisibilities() =>
@@ -151,33 +171,29 @@ namespace UsersManager.Controllers
             Photo photo = DB.Photos.Find(photoId);
             if (photo != null)
             {
+                GetFullPhoto(photo);
+                //photo.PhotoRatings = DB.PhotoRatings.Where((r) => r.PhotoId == photo.Id).ToArray();
                 return getView(photo);
             }
             return getAlternateView();
         }
 
-        public ActionResult SortRatingsBy(string fieldToSort)
+        public bool SortRatingsBy(string fieldToSort)
         {
             if ((string)Session["RatingFieldToSort"] == fieldToSort)
-            {
                 Session["RatingFieldSortDir"] = Toggle((bool)Session["RatingFieldSortDir"]);
+            else
                 Session["RatingFieldToSort"] = fieldToSort;
-                return View(DB.Photos);
-            }
-            return null;
-            
+            return true;
         }
 
-        public ActionResult SortPhotosBy(string fieldToSort)
+        public bool SortPhotosBy(string fieldToSort)
         {
             if ((string)Session["PhotoFieldToSort"] == fieldToSort)
-            {
                 Session["PhotoFieldSortDir"] = Toggle((bool)Session["PhotoFieldSortDir"]);
+            else
                 Session["PhotoFieldToSort"] = fieldToSort;
-                return View(DB.Photos);
-            }
-
-            return null;
+            return true;
         }
 
         public bool Toggle(bool value) => !value;
@@ -195,7 +211,9 @@ namespace UsersManager.Controllers
             if (forceRefresh || !IsPhotoUpToDate())
             {
                 SetLocalPhotosSerialNumber();
-                return PartialView(DB.Photos);
+                var photos = DB.Photos.ToList();
+                //photos.ForEach((p) => GetFullPhoto(p));
+                return PartialView(photos);
             }
             return null;
         }
