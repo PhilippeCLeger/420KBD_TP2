@@ -4,17 +4,17 @@
     @Html.ActionLink("Create New", "Create")
 </p>
 
-<div class="row row-cols-6">
+<div class="photo-row photo-row-cols-6">
     @foreach (var item in Model)
     {
-        <div class="col">
-            <div class="card">
-                <div class="card-title">@Helper.AvatarProfilLink(item.User)</div>
-                <div class="card-title mt-2">@item.Title</div>
-                <div class="card-img">
-                    <img src="@item.GetUrl(true)" alt="@item.Description" />
+        <div class="photo-col photo-border">
+            <div class="photo-card">
+                <div class="photo-title">@Helper.AvatarProfilLink(item.User)</div>
+                <div class="photo-title">@item.Title</div>
+                <div class="photo-img">
+                    <img src="@Url.Content(item.GetUrl(false))" width="300" height="200" alt="@item.Description" />
                 </div>
-                <div class="card-footer">
+                <div class="">
                     @Helper.Rating(item.Id.ToString(), item.Ratings) @item.Ratings
                 </div>
             </div>

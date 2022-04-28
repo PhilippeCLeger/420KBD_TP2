@@ -142,7 +142,7 @@ namespace UsersManager.Controllers
             if (photo != null)
             {
                 photo.PhotoRatings = DB.PhotoRatings.Where((r) => r.PhotoId == photo.Id).ToList();
-                if (photo.PhotoRatings.Count() == 0)
+                if (photo.PhotoRatings.Count() != 0)
                 {
                     photo.Ratings = photo.PhotoRatings.Average((r) => r.Rating);
                     photo.RatingsCount = photo.PhotoRatings.Count();
