@@ -9,10 +9,12 @@
     {
         <div class="col">
             <div class="card">
-                <div>@Helper.AvatarProfilLink(item.User)</div>
-                <div class="card-title">@item.Title</div>
-                <img src="@item.GetUrl()" alt="@item.Description"/>
-                <div>
+                <div class="card-title">@Helper.AvatarProfilLink(item.User)</div>
+                <div class="card-title mt-2">@item.Title</div>
+                <div class="card-img">
+                    <img src="@item.GetUrl(true)" alt="@item.Description" />
+                </div>
+                <div class="card-footer">
                     @Helper.Rating(item.Id.ToString(), item.Ratings) @item.Ratings
                 </div>
             </div>
