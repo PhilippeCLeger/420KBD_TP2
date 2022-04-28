@@ -239,8 +239,9 @@
 
 
 @helper PhotoBig(UsersManager.Models.Photo photo)
-{var Url = new System.Web.Mvc.UrlHelper(HttpContext.Current.Request.RequestContext);
-                    var imageUrl = Url.Content(photo.GetUrl(false));
+{
+    var Url = new System.Web.Mvc.UrlHelper(HttpContext.Current.Request.RequestContext);
+    var imageUrl = Url.Content(photo.GetUrl(false));
     <div>
         <a href="@imageUrl" target="_blank">
             <div class="photoBig"
@@ -249,4 +250,19 @@
             </div>
         </a>
     </div>
+}
+
+@helper ShowRating(double rating)
+{
+    for (int i = 1; i <= 5; i++)
+    {
+        if (i <= Math.Round(rating))
+        {
+            <i class="bi bi-star-fill rating"></i>
+        }
+        else
+        {
+            <i class="bi bi-star rating"></i>
+        }
+    }
 }
