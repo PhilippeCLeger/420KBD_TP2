@@ -75,13 +75,9 @@ namespace UsersManager.Controllers
         [UserAccess]
         public ActionResult Details(int id)
         {
-            return GetPhotoView<ActionResult>(id, (photo) => View(photo), () => RedirectToAction("Index"));
-            //Photo photo = DB.Photos.Find(id);
-            //if(photo != null)
-            //{
-            //    return View(photo);
-            //}
-            //return RedirectToAction("Index");
+            return GetPhotoView<ActionResult>(
+                id, 
+                (photo) => View(photo), () => RedirectToAction("Index"));
         }
 
         public ActionResult Delete(int id)
@@ -107,6 +103,7 @@ namespace UsersManager.Controllers
             photoRating.Rating = rating;
             photoRating.CreationDate = DateTime.Now;
             DB.AddPhotoRating(photoRating);
+            DB.Update_Photo_Ratings();
             return null;
         }
 
