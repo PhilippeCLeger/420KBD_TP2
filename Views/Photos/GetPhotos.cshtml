@@ -72,18 +72,17 @@
         }
         foreach (UsersManager.Models.Photo photo in Photos)
         {
-            <div class="col photo-border margin-top-3">
+            <div class="col photo-border margin-top-3" onclick="location.href='@Url.Action("Details/" + photo.Id)'">
+                <div class="card-title">@Helper.AvatarProfilLink(photo.User)</div>
+                <h3 class="margin-top-3">@photo.Title</h3>
                 <div class="">
-                    <div class="card-title">@Helper.AvatarProfilLink(photo.User)</div>
-                    <h3 class="margin-top-3">@photo.Title</h3>
-                    <div class="">
-                        <img src="@Url.Content(photo.GetUrl(false))" width="150" height="100" alt="@photo.Description" />
-                    </div>
-                    <div class="margin-top-3">
-                        @Helper.ShowRating(photo.Ratings)
-                    </div>
+                    <img src="@Url.Content(photo.GetUrl(false))" width="150" height="100" alt="@photo.Description" />
+                </div>
+                <div class="margin-top-3">
+                    @Helper.ShowRating(photo.Ratings)
                 </div>
             </div>
+            
         }
     }
 </div>
