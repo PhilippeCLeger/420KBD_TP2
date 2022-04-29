@@ -10,10 +10,15 @@
 @section Scripts{
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/partialRefresh")
-    <script>
-        let partialRefresh = new PartialRefresh("@Url.Action("GetPhotos")", "photosContainer", 5, postRefreshPhotos);
-        function postRefreshPhotos() {
-            null;
+<script>
+    let partialRefresh = new PartialRefresh("@Url.Action("GetPhotos")", "photosContainer", 5, PostRefreshTasks);
+
+        function PostRefreshTasks() {
+            $(".sortRatings").click(function () {
+                $(".sortRatings").css("color", "black");
+                let url = @Url.Action("/") + "SortPhotosBy?fieldToSort=" + $(this).attr("fieldToSort");
+                partialRefresh.command(url);
+            });
         }
     </script>
 } 

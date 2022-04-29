@@ -212,7 +212,7 @@ namespace UsersManager.Controllers
             if (forceRefresh || !IsPhotoUpToDate())
             {
                 SetLocalPhotosSerialNumber();
-                var photos = DB.Photos.ToList();
+                var photos = DB.VisiblePhotos(OnlineUsers.CurrentUserId);
                 //photos.ForEach((p) => GetFullPhoto(p));
                 return PartialView(photos);
             }
