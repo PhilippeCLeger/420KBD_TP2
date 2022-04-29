@@ -120,6 +120,8 @@ namespace UsersManager.Controllers
                 Session["PhotoFieldToSort"] = "dates";
             if (Session["PhotoFieldSortDir"] == null)
                 Session["PhotoFieldSortDir"] = true;
+            if (Session["PhotoSearchTags"] == null)
+                Session["PhotoSearchTags"] = "";
         }
 
         public PartialViewResult GetPhotoDetails(int photoId)
@@ -194,6 +196,12 @@ namespace UsersManager.Controllers
                 Session["PhotoFieldSortDir"] = Toggle((bool)Session["PhotoFieldSortDir"]);
             else
                 Session["PhotoFieldToSort"] = fieldToSort;
+            return true;
+        }
+
+        public bool SetPhotoSearchTags(string searchTags)
+        {
+            Session["PhotoSearchTags"] = searchTags;
             return true;
         }
 
