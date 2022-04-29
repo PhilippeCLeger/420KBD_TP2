@@ -8,19 +8,24 @@
     string sortUsersIconColor = ((string)Session["PhotoFieldToSort"] == "users" ? "blue" : "black");
     string sortRatingsIconColor = ((string)Session["PhotoFieldToSort"] == "ratings" ? "blue" : "black");
 }
-<div id="commandSection" style="display:grid; grid-template-columns: 60px 30px 30px 30px;">
-    @Helper.GlyphiconAction("Create", "glyphicon glyphicon-plus", "Ajouter une photo")
-    <input type="text" id="searchTags"/>
-    <span id="searchIcon" style="color:black"
-          class="sortRatings glyphiconStyle glyphicon glyphicon-search pointer" title="Trier par dates d'évaluation"></span>
+<div style="display: flex; flex-direction:row; column-gap: 2rem">
+    <div>
+        @Helper.GlyphiconAction("Create", "glyphicon glyphicon-plus", "Ajouter une photo")
+        <span><input type="text" id="searchTags" style="width: 100px;" /></span>
+        <span id="searchIcon" style="color:black"
+              class="sortRatings glyphiconStyle glyphicon glyphicon-search pointer" title="Trier par dates d'évaluation"></span>
+    </div>
 
-    <span id="sortDates" fieldToSort="dates" style="color:@sortDatesIconColor"
-          class="sortRatings glyphicon glyphiconStyle glyphicon-calendar pointer" title="Trier par dates d'évaluation"></span>
-    <span id="sortUsers" fieldToSort="users" style="color:@sortUsersIconColor"
-          class="sortRatings glyphicon glyphiconStyle glyphicon-user pointer" title="Trier noms d'usager"></span>
-    <span id="sortRatingss" fieldToSort="ratings" style="color:@sortRatingsIconColor"
-          class="sortRatings glyphicon glyphiconStyle glyphicon-star pointer" title="Trier par évaluations"></span>
+    <div id="commandSection" style="display:grid; grid-template-columns:30px 30px 30px;">
+        <span id="sortDates" fieldToSort="dates" style="color:@sortDatesIconColor"
+              class="sortRatings glyphicon glyphiconStyle glyphicon-calendar pointer" title="Trier par dates d'évaluation"></span>
+        <span id="sortUsers" fieldToSort="users" style="color:@sortUsersIconColor"
+              class="sortRatings glyphicon glyphiconStyle glyphicon-user pointer" title="Trier noms d'usager"></span>
+        <span id="sortRatingss" fieldToSort="ratings" style="color:@sortRatingsIconColor"
+              class="sortRatings glyphicon glyphiconStyle glyphicon-star pointer" title="Trier par évaluations"></span>
+    </div>
 </div>
+
 
 <div class="row row-cols-6 margin-top-3">
     @{
@@ -38,7 +43,7 @@
                 }
                 break;
             case "users":
-                if ((bool)Session["RatingFieldSortDir"])
+                if ((bool)Session["PhotoFieldSortDir"])
                 {
                     Photos = Model.OrderBy(pr => pr.User.FirstName).ThenBy(pr => pr.User.LastName);
                 }
@@ -48,7 +53,7 @@
                 }
                 break;
             case "ratings":
-                if ((bool)Session["RatingFieldSortDir"])
+                if ((bool)Session["PhotoFieldSortDir"])
                 {
                     Photos = Model.OrderBy(pr => pr.Ratings);
                 }
@@ -57,11 +62,16 @@
                     Photos = Model.OrderByDescending(pr => pr.Ratings);
                 }
                 break;
-            default: break;
+            default:
+                if (Photos == null)
+                {
+                    Photos = Model;
+                }
+                break;
         }
         foreach (UsersManager.Models.Photo photo in Photos)
         {
-            <div class="col photo-border margin-top-3" >
+            <div class="col photo-border margin-top-3">
                 <div class="">
                     <div class="card-title">@Helper.AvatarProfilLink(photo.User)</div>
                     <h3 class="margin-top-3">@photo.Title</h3>
