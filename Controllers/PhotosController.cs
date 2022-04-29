@@ -201,7 +201,10 @@ namespace UsersManager.Controllers
 
         public bool SetPhotoSearchTags(string searchTags)
         {
-            Session["PhotoSearchTags"] = searchTags;
+            if (string.IsNullOrWhiteSpace(searchTags))
+                Session["PhotoSearchTags"] = "";
+            else
+                Session["PhotoSearchTags"] = searchTags;
             return true;
         }
 
@@ -219,10 +222,11 @@ namespace UsersManager.Controllers
         {
             if (forceRefresh || !IsPhotoUpToDate())
             {
+                InitSortPhotos();
                 SetLocalPhotosSerialNumber();
                 var photos = DB.VisiblePhotos(OnlineUsers.CurrentUserId);
-                //photos.ForEach((p) => GetFullPhoto(p));
-                return PartialView(photos);
+                var searchTags = (string)Session["PhotoSearchTags"];
+                return PartialView(UsersDBDAL.SearchPhotosByKeywords(photos, searchTags));
             }
             return null;
         }

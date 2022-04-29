@@ -19,6 +19,11 @@
                 let url = @Url.Action("/") + "SortPhotosBy?fieldToSort=" + $(this).attr("fieldToSort");
                 partialRefresh.command(url);
             });
+            $("#searchIcon").click(function () {
+                console.log($("#searchTags")[0].value);
+                let url = @Url.Action("/") + "SetPhotoSearchTags?searchTags=" + $("#searchTags")[0].value;
+                partialRefresh.command(url);
+            });
         }
-    </script>
+</script>
 } 
