@@ -7,13 +7,14 @@
     string sortDatesIconColor = ((string)Session["PhotoFieldToSort"] == "dates" ? "blue" : "black");
     string sortUsersIconColor = ((string)Session["PhotoFieldToSort"] == "users" ? "blue" : "black");
     string sortRatingsIconColor = ((string)Session["PhotoFieldToSort"] == "ratings" ? "blue" : "black");
+    string searchTags = (string)Session["PhotoSearchTags"];
 }
 <div style="display: flex; flex-direction:row; column-gap: 2rem">
     <div>
         @Helper.GlyphiconAction("Create", "glyphicon glyphicon-plus", "Ajouter une photo")
-        <span><input type="text" id="searchTags" style="width: 100px;" /></span>
+        <span><input type="text" id="searchTags" style="width: 100px;" value="@searchTags"/></span>
         <span id="searchIcon" style="color:black"
-              class="sortRatings glyphiconStyle glyphicon glyphicon-search pointer" title="Trier par dates d'évaluation"></span>
+              class="glyphiconStyle glyphicon glyphicon-search pointer" title="Trier par dates d'évaluation"></span>
     </div>
 
     <div id="commandSection" style="display:grid; grid-template-columns:30px 30px 30px;">
