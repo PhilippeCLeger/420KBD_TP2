@@ -1,6 +1,7 @@
-﻿
+﻿@model UsersManager.Models.Photo
 @{
     ViewBag.Title = "Modification de photo";
+    Model.Data = Model.GUID;
 }
 
 @{ Html.RenderPartial("PhotoForm");}

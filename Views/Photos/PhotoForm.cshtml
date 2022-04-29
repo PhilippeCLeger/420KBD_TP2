@@ -2,7 +2,7 @@
 
 @{ 
     System.Web.Mvc.SelectList photoVisibilities = ViewBag.PhotoVisibilities;
-    int photoVisibility = Model.PhotoVisibility != null ? Model.PhotoVisibility.Id : -1;
+    int photoVisibility = Model.VisibilityId;
     //string textSubmit = (string)(ViewBag.Title).StartsWith("Ajout")
 }
 
@@ -17,6 +17,8 @@
 @Html.HiddenFor(model => model.RatingsCount)
 @Html.HiddenFor(model => model.CreationDate)
 @Html.HiddenFor(model => model.UserId)
+@Html.HiddenFor(model => model.GUID)
+@*@Html.HiddenFor(model => model.Data)*@
 
 
 <div class="form-horizontal">

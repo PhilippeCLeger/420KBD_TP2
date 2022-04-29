@@ -51,5 +51,8 @@ namespace UsersManager.Models
 
         [Display(Name = "Évaluations"), Range(0, 5, ErrorMessage = "invalide")]
         public double Ratings { get; set; }
+
+        [Display(Name = "Visibilité"), Required(ErrorMessage = "Obligatoire")]
+        public int VisibilityId;
     }
 }

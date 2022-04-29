@@ -34,6 +34,7 @@ namespace UsersManager.Controllers
             //photo.Ratings = 0;
             //photo.CreationDate
             //photo.VisibilityId = (int)photo.VisibilityId;
+            //photo.GUID = photo.Data;
             if (ModelState.IsValid)
             {
                 photo = DB.Add_Photo(photo);
@@ -63,8 +64,10 @@ namespace UsersManager.Controllers
         [HttpPost]
         public ActionResult Edit(Photo photo)
         {
+            //photo.GUID;
             if (ModelState.IsValid)
             {
+                //if (!string.IsNullOrEmpty(photo.GUID)) photo.Data = "";
                 DB.Update_Photo(photo);
                 RenewPhotosSerialNumber();
                 return RedirectToAction($"Details/{photo.Id}");
@@ -172,6 +175,7 @@ namespace UsersManager.Controllers
         private T GetPhotoView<T>(int photoId, Func<Photo, T> getView, Func<T> getAlternateView)
         {
             Photo photo = DB.Photos.Find(photoId);
+            photo.Data = photo.GUID;
             if (photo != null)
             {
                 GetFullPhoto(photo);
