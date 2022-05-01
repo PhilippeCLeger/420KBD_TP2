@@ -2,15 +2,17 @@
 @{
     ViewBag.Title = "Répertoire de photos";
 }
-
+<link rel="stylesheet" href="~/Content/Site.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
 <h2>Répertoire de photos</h2>
 
 <div id="photosContainer"><!--Rafraichis périodiquement--></div>
 
 @section Scripts{
+    @*@Scripts.Render("~/bundles/ratings")*@
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/partialRefresh")
-<script>
+    <script>
     let partialRefresh = new PartialRefresh("@Url.Action("GetPhotos")", "photosContainer", 5, PostRefreshTasks);
 
         function PostRefreshTasks() {
@@ -25,5 +27,5 @@
                 partialRefresh.command(url);
             });
         }
-</script>
+    </script>
 } 

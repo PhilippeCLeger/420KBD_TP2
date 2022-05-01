@@ -1,7 +1,4 @@
 ﻿@model IEnumerable<UsersManager.Models.Photo>
-<link rel="stylesheet" href="~/Content/original.bootstrap.css">
-<link rel="stylesheet" href="~/Content/Site.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
 
 @{
     string sortDatesIconColor = ((string)Session["PhotoFieldToSort"] == "dates" ? "blue" : "black");
@@ -9,7 +6,7 @@
     string sortRatingsIconColor = ((string)Session["PhotoFieldToSort"] == "ratings" ? "blue" : "black");
     string searchTags = (string)Session["PhotoSearchTags"];
 }
-<div style="display: flex; flex-direction:row; column-gap: 2rem">
+<div style="display: flex; flex-direction:row; column-gap: 2rem; margin: 3rem;">
     <div>
         @Helper.GlyphiconAction("Create", "glyphicon glyphicon-plus", "Ajouter une photo")
         <span><input type="text" id="searchTags" style="width: 100px;" value="@searchTags"/></span>
@@ -28,7 +25,7 @@
 </div>
 
 
-<div class="row row-cols-6 margin-top-3">
+<div class=" photosContainerGrid">
     @{
         IEnumerable<UsersManager.Models.Photo> Photos = null;
         switch ((string)Session["PhotoFieldToSort"])
@@ -72,17 +69,19 @@
         }
         foreach (UsersManager.Models.Photo photo in Photos)
         {
-            <div class="col photo-border margin-top-3" onclick="location.href='@Url.Action("Details/" + photo.Id)'">
-                <div class="card-title">@Helper.AvatarProfilLink(photo.User)</div>
-                <h3 class="margin-top-3">@photo.Title</h3>
-                <div class="">
-                    <img src="@Url.Content(photo.GetUrl(false))" width="150" height="100" alt="@photo.Description" />
-                </div>
-                <div class="margin-top-3">
-                    @Helper.ShowRating(photo.Ratings)
+            <div class="photoContainer" onclick="location.href='@Url.Action("Details/" + photo.Id)'">
+                <div class="">@Helper.AvatarProfilLink(photo.User)</div>
+                <h3 class="">@photo.Title</h3>
+                <img class="photo" src="@Url.Content(photo.GetUrl(false))"></img>
+                <div style="display:grid; grid-template-columns:130px auto">
+                    <div>
+                        @Helper.ShowRating(photo.Ratings)
+                    </div>
+                    <div style="padding-top: 0.5rem;">
+                        <span style="font-size:16px; ">@Math.Round(photo.Ratings, 1) / @photo.RatingsCount</span>
+                    </div>
                 </div>
             </div>
-            
         }
     }
 </div>
